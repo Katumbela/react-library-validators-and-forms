@@ -1,12 +1,12 @@
-// tests/components/DynamicForm.test.tsx
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import DynamicForm from '../../../src/components/Forms/DynamicForm'; 
 
-// Mock validation functions
+// Função de validação mock
 const requiredValidation = (value: any) => (value ? null : 'This field is required');
 
+// Definição dos campos do formulário
 const fields = [
   { name: 'username', label: 'Username', type: 'text', validation: requiredValidation },
   { name: 'email', label: 'Email', type: 'email', validation: requiredValidation },
@@ -28,7 +28,9 @@ describe('DynamicForm Component', () => {
     fireEvent.click(screen.getByText('Submit'));
 
     fields.forEach((field) => {
-      expect(screen.getByText('This field is required')).toBeInTheDocument();
+      // Usando queryAllByText para contar o número de mensagens de erro
+      const errorMessages = screen.queryAllByText('This field is required');
+      expect(errorMessages).toHaveLength(fields.length);
     });
   });
 
@@ -41,6 +43,7 @@ describe('DynamicForm Component', () => {
 
     fireEvent.click(screen.getByText('Submit'));
 
+    // Verifica que nenhuma mensagem de erro está presente
     fields.forEach((field) => {
       expect(screen.queryByText('This field is required')).not.toBeInTheDocument();
     });
