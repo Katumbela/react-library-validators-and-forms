@@ -96,7 +96,10 @@ export function validateAndFormatPhoneNumber(number: string, countryCode: Countr
         return { valid: false, formatted: null, error: 'Unsupported country code' };
     }
 
-    const cleanedNumber = number.replace(/\D/g, '');
+    // Remove todos os caracteres não numéricos do número fornecido, mantendo o sinal de '+'
+    const cleanedNumber = number.replace(/[^\d+]/g, '');
+
+    // Verifique se o número limpo corresponde ao formato esperado
     const isValid = format.test(cleanedNumber);
 
     if (!isValid) {
@@ -106,18 +109,19 @@ export function validateAndFormatPhoneNumber(number: string, countryCode: Countr
     let formattedNumber: string | null = null;
     switch (countryCode) {
         case 'US':
-            formattedNumber = cleanedNumber.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+$1 $2 $3-$4');
+            formattedNumber = cleanedNumber.replace(/^(\+1)(\d{4})(\d{3})(\d{3})$/, '$1 $2 $3 $4');
             break;
         case 'GB':
-            formattedNumber = cleanedNumber.replace(/(\d{2})(\d{4})(\d{6})/, '+44 $1 $2 $3');
+            formattedNumber = cleanedNumber.replace(/^(\+44)(\d{4})(\d{3})(\d{3})$/, '$1 $2 $3 $4');
             break;
         case 'AO':
-            formattedNumber = cleanedNumber.replace(/(\d{4})(\d{3})(\d{6})/, '+244 $1 $2 $3');
+            formattedNumber = cleanedNumber.replace(/^(\+244)(\d{3})(\d{3})(\d{3})$/, '$1 $2 $3 $4');
             break;
     }
 
     return { valid: true, formatted: formattedNumber, error: null };
 }
+
 
 
 

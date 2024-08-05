@@ -49,7 +49,6 @@ describe('Validation Utilities', () => {
     test('validateDate should return null for valid date format', () => {
         expect(validateDate('2020-12-01')).toBeNull();
     });
-
     test('validateAndFormatPhoneNumber should return error for invalid phone number (US)', () => {
         expect(validateAndFormatPhoneNumber('12345', 'US')).toEqual({
             valid: false,
@@ -61,7 +60,7 @@ describe('Validation Utilities', () => {
     test('validateAndFormatPhoneNumber should return formatted number for valid phone number (US)', () => {
         expect(validateAndFormatPhoneNumber('+11234567890', 'US')).toEqual({
             valid: true,
-            formatted: '+1 234 567 890',
+            formatted: '+1 1234 567 890',
             error: null
         });
     });
@@ -120,7 +119,7 @@ describe('Validation Utilities', () => {
         // Teste para BI onde os dígitos de verificação não são válidos
         expect(validateAngolanBI('006235348ZA0XX')).toBe('Invalid check digits'); // 'XX' não é válido
         expect(validateAngolanBI('006235348ZA0X1')).toBe('Invalid check digits'); // 'X1' não é válido
-        expect(validateAngolanBI('006235348ZA0456')).toBe('Invalid check digits'); // 4 dígitos no final
+        expect(validateAngolanBI('006235348ZA0456')).toBe('Invalid ID card length'); // 4 dígitos no final
     });
 
     test('should return null for valid ID card', () => {

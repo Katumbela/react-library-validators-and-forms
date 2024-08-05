@@ -1,5 +1,5 @@
 {
-  "name": "samples-lib",
+  "name": "samples-lib-katumbela",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -8,17 +8,26 @@
     "lint": "eslint src --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
-  
-  "keywords": [],
-  "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "A library for react development which includes animations like slides , dynamic forms and some validators ",
   "dependencies": {
     "@testing-library/react": "^16.0.0",
     "libphonenumber-js": "^1.11.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
+  "keywords": [
+    "library",
+    "react",
+    "forms",
+    "validators",
+    "react validator",
+    "slider",
+    "carousel",
+    "animation",
+    "typescript"
+  ],
+  "author": "Joao Afonso Katombela",
   "devDependencies": {
     "@babel/preset-react": "^7.24.7",
     "@rollup/plugin-commonjs": "^26.0.1",
