@@ -98,26 +98,33 @@ describe('Validation Utilities', () => {
         });
     });
 
-    test('validateAngolanBI should return error for incorrect length', () => {
-        expect(validateAngolanBI('006235348BA04')).toBe('Invalid ID card length');
-        expect(validateAngolanBI('006235348BA0456')).toBe('Invalid ID card length');
+    test('should return error for incorrect length', () => {
+        // Teste para BI com comprimento inválido
+        expect(validateAngolanBI('006235348BA04')).toBe('Invalid ID card length'); // 12 caracteres
+        expect(validateAngolanBI('006235348BA0456')).toBe('Invalid ID card length'); // 16 caracteres
     });
 
-    test('validateAngolanBI should return error for invalid numeric part', () => {
-        expect(validateAngolanBI('00623X348BA045')).toBe('Invalid numeric part');
+    test('should return error for invalid numeric part', () => {
+        // Teste para BI onde a parte numérica não é válida
+        expect(validateAngolanBI('00623X348BA045')).toBe('Invalid numeric part'); // 'X' em vez de dígito
+        expect(validateAngolanBI('00623X348BA0A5')).toBe('Invalid numeric part'); // 'X' e 'A' em vez de dígitos
     });
 
-    test('validateAngolanBI should return error for invalid province code', () => {
-        expect(validateAngolanBI('006235348XY0X')).toBe('Invalid province code');
-        expect(validateAngolanBI('006235348ZA0@')).toBe('Invalid province code');
+    test('should return error for invalid province code', () => {
+        // Teste para BI com código de província inválido
+        expect(validateAngolanBI('006235348XY045')).toBe('Invalid province code'); // 'XY' não é válido
+        expect(validateAngolanBI('006235348ZZ045')).toBe('Invalid province code'); // 'ZZ' não é válido
     });
 
-    test('validateAngolanBI should return error for invalid check digits', () => {
-        expect(validateAngolanBI('006235348ZA0XX')).toBe('Invalid check digits');
-        expect(validateAngolanBI('006235348ZA0X1')).toBe('Invalid check digits');
+    test('should return error for invalid check digits', () => {
+        // Teste para BI onde os dígitos de verificação não são válidos
+        expect(validateAngolanBI('006235348ZA0XX')).toBe('Invalid check digits'); // 'XX' não é válido
+        expect(validateAngolanBI('006235348ZA0X1')).toBe('Invalid check digits'); // 'X1' não é válido
+        expect(validateAngolanBI('006235348ZA0456')).toBe('Invalid check digits'); // 4 dígitos no final
     });
 
-    test('validateAngolanBI should return null for valid ID card', () => {
+    test('should return null for valid ID card', () => {
+        // Teste para um BI válido
         expect(validateAngolanBI('006235348ZA045')).toBeNull();
     });
 });

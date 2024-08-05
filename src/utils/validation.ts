@@ -7,7 +7,7 @@ const supportedCountries: CountryCode[] = [
 ];
 
 const validProvinces = [
-    'BE', 'BG', 'BI', 'CA', 'CN', 'CS', 'CU', 'HB', 'HL', 'LD', 'LN', 'LS', 'MA', 'MX', 'NB', 'UG', 'ZA'
+    'BE', 'BA', 'BG', 'BI', 'CA', 'CN', 'CS', 'CU', 'HB', 'HL', 'LD', 'LN', 'LS', 'MA', 'MX', 'NB', 'UG', 'ZA'
 ];
 
 
@@ -45,7 +45,14 @@ export function validateDate(date: string): string | null {
     if (!regex.test(date)) {
         return 'Invalid date format (YYYY-MM-DD)';
     }
-    return null;
+
+    const [year, month, day] = date.split('-').map(Number);
+
+    // Verificar se a data é válida
+    const isValidDate = (d: Date) => d.getFullYear() === year && d.getMonth() + 1 === month && d.getDate() === day;
+    const dateObj = new Date(year, month - 1, day);
+
+    return isValidDate(dateObj) ? null : 'Invalid date format (YYYY-MM-DD)';
 }
 
 // Validação de Número de Telefone
@@ -56,51 +63,56 @@ export const validatePhoneNumber = (phoneNumber: string): string | null => {
 
 
 // Validação e Formatação para EUA
-const validateAndFormatUS = (phoneNumber: string): { valid: boolean; formatted: string | null; error: string | null } => {
+export const validateAndFormatUS = (phoneNumber: string): { valid: boolean; formatted: string | null; error: string | null } => {
     const re = /^\+1\d{10}$/; // Exemplo de formato: +1xxxxxxxxxx
     const formatted = phoneNumber.replace(/\D/g, '');
     return re.test(formatted) ? { valid: true, formatted: `+1 ${formatted.slice(1, 4)} ${formatted.slice(4, 7)}-${formatted.slice(7)}`, error: null } : { valid: false, formatted: null, error: 'Invalid phone number' };
 };
 
 // Validação e Formatação para Reino Unido
-const validateAndFormatGB = (phoneNumber: string): { valid: boolean; formatted: string | null; error: string | null } => {
+export const validateAndFormatGB = (phoneNumber: string): { valid: boolean; formatted: string | null; error: string | null } => {
     const re = /^\+44\d{10}$/; // Exemplo de formato: +44xxxxxxxxxx
     const formatted = phoneNumber.replace(/\D/g, '');
     return re.test(formatted) ? { valid: true, formatted: `+44 ${formatted.slice(2, 5)} ${formatted.slice(5, 8)} ${formatted.slice(8)}`, error: null } : { valid: false, formatted: null, error: 'Invalid phone number' };
 };
 
 // Validação e Formatação para Angola
-const validateAndFormatAO = (phoneNumber: string): { valid: boolean; formatted: string | null; error: string | null } => {
+export const validateAndFormatAO = (phoneNumber: string): { valid: boolean; formatted: string | null; error: string | null } => {
     const re = /^\+244\d{9}$/; // Exemplo de formato: +244xxxxxxxxx
     const formatted = phoneNumber.replace(/\D/g, '');
     return re.test(formatted) ? { valid: true, formatted: `+244 ${formatted.slice(4, 7)} ${formatted.slice(7)}`, error: null } : { valid: false, formatted: null, error: 'Invalid phone number' };
 };
 
-// Função genérica para validar e formatar números de telefone
-// Função genérica para validar e formatar números de telefone
-export function validateAndFormatPhoneNumber(number: string, countryCode: string): { valid: boolean, formatted: string | null, error: string | null } {
-    const formats: { [key: string]: RegExp } = {
+// Função genérica para validar e formatar números de telefone 
+export function validateAndFormatPhoneNumber(number: string, countryCode: CountryCode): { valid: boolean, formatted: string | null, error: string | null } {
+    const formats: { [key in CountryCode]?: RegExp } = {
         US: /^\+1\d{10}$/,
         GB: /^\+44\d{10}$/,
         AO: /^\+244\d{9}$/
     };
 
     const format = formats[countryCode];
-    if (!format || !format.test(number)) {
+    if (!format) {
+        return { valid: false, formatted: null, error: 'Unsupported country code' };
+    }
+
+    const cleanedNumber = number.replace(/\D/g, '');
+    const isValid = format.test(cleanedNumber);
+
+    if (!isValid) {
         return { valid: false, formatted: null, error: 'Invalid phone number' };
     }
 
     let formattedNumber: string | null = null;
-
     switch (countryCode) {
         case 'US':
-            formattedNumber = number.replace(/(\+1)(\d{3})(\d{3})(\d{4})/, '+1 $2 $3-$4');
+            formattedNumber = cleanedNumber.replace(/(\d{1})(\d{3})(\d{3})(\d{4})/, '+$1 $2 $3-$4');
             break;
         case 'GB':
-            formattedNumber = number.replace(/(\+44)(\d{4})(\d{6})/, '+44 $1 $2 $3');
+            formattedNumber = cleanedNumber.replace(/(\d{2})(\d{4})(\d{6})/, '+44 $1 $2 $3');
             break;
         case 'AO':
-            formattedNumber = number.replace(/(\+244)(\d{3})(\d{6})/, '+244 $2 $3');
+            formattedNumber = cleanedNumber.replace(/(\d{4})(\d{3})(\d{6})/, '+244 $1 $2 $3');
             break;
     }
 
@@ -110,26 +122,29 @@ export function validateAndFormatPhoneNumber(number: string, countryCode: string
 
 
 
-// Validação de Bilhete de Identidade
+
 // Validação de Bilhete de Identidade
 export function validateAngolanBI(bi: string): string | null {
-    const length = bi.length;
-    if (length !== 13) {
+    if (bi.length !== 14) {
         return 'Invalid ID card length';
     }
+
     const numericPart = bi.slice(0, 9);
     if (!/^\d{9}$/.test(numericPart)) {
         return 'Invalid numeric part';
     }
+
     const provinceCode = bi.slice(9, 11);
-    const validProvinceCodes = ['BA', 'LU', 'MO', 'ZA']; // Códigos de províncias válidos
+    const validProvinceCodes = ['BA', 'LU', 'MO', 'ZA']; // Ajuste com códigos de províncias válidos
     if (!validProvinceCodes.includes(provinceCode)) {
         return 'Invalid province code';
     }
+
     const checkDigits = bi.slice(11);
-    if (!/^[0-9A-Z]{2}$/.test(checkDigits)) {
+    if (!/^\d{3}$/.test(checkDigits)) {
         return 'Invalid check digits';
     }
+
     return null;
 }
 
