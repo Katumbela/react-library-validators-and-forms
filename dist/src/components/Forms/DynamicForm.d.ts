@@ -4,6 +4,7 @@ interface Field {
     label: string;
     type: string;
     validation: (value: any) => string | null;
+    className?: string;
 }
 interface DynamicFormProps {
     fields: Field[];
