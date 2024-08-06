@@ -1,6 +1,6 @@
 {
   "name": "samples-lib-react",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -8,6 +8,10 @@
     "build": "tsc",
     "lint": "eslint src --ext .ts,.tsx",
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Katumbela/react-library-validators-and-forms/blob/main/README_2.md"
   },
   "license": "ISC",
   "description": "A library for react development which includes animations like slides , dynamic forms and some validators ",
