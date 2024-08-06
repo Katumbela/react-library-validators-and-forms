@@ -48,7 +48,7 @@ const DynamicForm = ({ fields, onSubmit }) => {
     return (react_1.default.createElement("form", { onSubmit: handleSubmit },
         fields.map((field) => (react_1.default.createElement("div", { key: field.name },
             react_1.default.createElement("label", { htmlFor: field.name }, field.label),
-            react_1.default.createElement("input", { id: field.name, name: field.name, type: field.type, value: values[field.name] || '', onChange: handleChange }),
+            react_1.default.createElement("input", { id: field.name, name: field.name, type: field.type, value: values[field.name] || '', onChange: handleChange, className: field.className }),
             errors[field.name] && react_1.default.createElement("span", { style: { color: 'red' } }, errors[field.name])))),
         react_1.default.createElement("button", { type: "submit" }, "Submit")));
 };
