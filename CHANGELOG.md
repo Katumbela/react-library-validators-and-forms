@@ -2,6 +2,8 @@
 
 Todas as alterações importantes deste projeto serão documentadas neste arquivo.
 
+
+
 ## [Unreleased]
 
 ### Adicionado
