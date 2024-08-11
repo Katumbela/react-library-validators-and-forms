@@ -21,6 +21,6 @@ async function testApiRequest(bi) {
 }
 
 // Exemplo de uso
-testApiRequest('006235348BA044')
+testApiRequest('006265318BA048')
     .then(result => console.log('API Response:', result))
     .catch(error => console.error('API Error:', error));
