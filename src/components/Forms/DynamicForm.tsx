@@ -5,6 +5,7 @@ interface Field {
   label: string;
   type: string;
   validation: (value: any) => string | null;
+  className?: string; 
 }
 
 interface DynamicFormProps {
@@ -48,6 +49,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ fields, onSubmit }) => {
             type={field.type}
             value={values[field.name] || ''}
             onChange={handleChange}
+            className={field.className} // Aplicando a classe CSS
           />
           {errors[field.name] && <span style={{ color: 'red' }}>{errors[field.name]}</span>}
         </div>
