@@ -1,5 +1,7 @@
 
 
+import axios from 'axios';
+
 type CountryCode = 'US' | 'GB' | 'FR' | 'DE' | 'IT' | 'ES' | 'PT' | 'BR' | 'AR' | 'CL' | 'CO' | 'MX' | 'NG' | 'ZA' | 'AO';
 
 const supportedCountries: CountryCode[] = [
@@ -126,29 +128,49 @@ export function validateAndFormatPhoneNumber(number: string, countryCode: Countr
 
 
 
-
 // Validação de Bilhete de Identidade
-export function validateAngolanBI(bi: string): string | null {
+export async function validateAngolanBI(bi: string): Promise<string | null> {
+    // Verificação do comprimento
     if (bi.length !== 14) {
         return 'Invalid ID card length';
     }
 
+    // Verificação da parte numérica
     const numericPart = bi.slice(0, 9);
     if (!/^\d{9}$/.test(numericPart)) {
         return 'Invalid numeric part';
     }
 
+    // Verificação do código da província
     const provinceCode = bi.slice(9, 11);
-    const validProvinceCodes = ['BA', 'LU', 'MO', 'ZA']; // Ajuste com códigos de províncias válidos
+    const validProvinceCodes = ['BA', 'LU', 'MO', 'ZA']; 
     if (!validProvinceCodes.includes(provinceCode)) {
         return 'Invalid province code';
     }
 
+    // Verificação dos dígitos de controle
     const checkDigits = bi.slice(11);
     if (!/^\d{3}$/.test(checkDigits)) {
         return 'Invalid check digits';
     }
 
-    return null;
+    // Se todas as verificações locais passarem, faça a requisição à API
+    try {
+        const response = await axios.post('https://bi-bs.minjusdh.gov.ao/pims-backend/api/v1/progress', {
+            affairsReceipt: bi,
+            affairsType: 'IDCard',
+            captchaValue: ''
+        });
+
+        console.log(response)
+
+        if (response.data && response.data.affairsProgressState) {
+            return response.data.affairsProgressState;
+        }
+        return 'Invalid BI according to external verification';
+    } catch (error: any) {
+        return `Error in external verification: ${error.message}`;
+    }
 }
+
 
