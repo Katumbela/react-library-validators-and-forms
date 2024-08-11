@@ -96,39 +96,34 @@ describe('Validation Utilities', () => {
             error: null
         });
     });
-    test('should return error for incorrect length', async () => {
+
+    test('should return error for incorrect length', () => {
         // Teste para BI com comprimento inválido
-        await expect(validateAngolanBI('006235348BA04')).resolves.toBe('Invalid ID card length'); // 12 caracteres
-        await expect(validateAngolanBI('006235348BA0456')).resolves.toBe('Invalid ID card length'); // 16 caracteres
+        expect(validateAngolanBI('006235348BA04')).toBe('Invalid ID card length'); // 12 caracteres
+        expect(validateAngolanBI('006235348BA0456')).toBe('Invalid ID card length'); // 16 caracteres
     });
 
-    test('should return error for invalid numeric part', async () => {
+    test('should return error for invalid numeric part', () => {
         // Teste para BI onde a parte numérica não é válida
-        await expect(validateAngolanBI('00623X348BA045')).resolves.toBe('Invalid numeric part'); // 'X' em vez de dígito
-        await expect(validateAngolanBI('00623X348BA0A5')).resolves.toBe('Invalid numeric part'); // 'X' e 'A' em vez de dígitos
+        expect(validateAngolanBI('00623X348BA045')).toBe('Invalid numeric part'); // 'X' em vez de dígito
+        expect(validateAngolanBI('00623X348BA0A5')).toBe('Invalid numeric part'); // 'X' e 'A' em vez de dígitos
     });
 
-    test('should return error for invalid province code', async () => {
+    test('should return error for invalid province code', () => {
         // Teste para BI com código de província inválido
-        await expect(validateAngolanBI('006235348XY045')).resolves.toBe('Invalid province code'); // 'XY' não é válido
-        await expect(validateAngolanBI('006235348ZZ045')).resolves.toBe('Invalid province code'); // 'ZZ' não é válido
+        expect(validateAngolanBI('006235348XY045')).toBe('Invalid province code'); // 'XY' não é válido
+        expect(validateAngolanBI('006235348ZZ045')).toBe('Invalid province code'); // 'ZZ' não é válido
     });
 
-    test('should return error for invalid check digits', async () => {
+    test('should return error for invalid check digits', () => {
         // Teste para BI onde os dígitos de verificação não são válidos
-        await expect(validateAngolanBI('006235348ZA0XX')).resolves.toBe('Invalid check digits'); // 'XX' não é válido
-        await expect(validateAngolanBI('006235348ZA0X1')).resolves.toBe('Invalid check digits'); // 'X1' não é válido
-        await expect(validateAngolanBI('006235348ZA0456')).resolves.toBe('Invalid ID card length'); // 4 dígitos no final
+        expect(validateAngolanBI('006235348ZA0XX')).toBe('Invalid check digits'); // 'XX' não é válido
+        expect(validateAngolanBI('006235348ZA0X1')).toBe('Invalid check digits'); // 'X1' não é válido
+        expect(validateAngolanBI('006235348ZA0456')).toBe('Invalid ID card length'); // 4 dígitos no final
     });
 
-    test('should return null for valid ID card', async () => {
+    test('should return null for valid ID card', () => {
         // Teste para um BI válido
-        await expect(validateAngolanBI('006235348BA044')).resolves.toBeNull();
+        expect(validateAngolanBI('006235348ZA045')).toBeNull();
     });
-
-    test('should return error for invalid ID from external API', async () => {
-        // Teste para um BI que não existe na API externa
-        await expect(validateAngolanBI('000000000ZZ045')).resolves.toBe('Invalid province code');
-    });
-
 });
